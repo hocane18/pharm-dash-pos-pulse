@@ -25,7 +25,7 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="animate-fade-in">
+        <Button variant="ghost" size="icon" className="animate-fade-in" aria-label="Toggle theme">
           {theme === "dark" ? (
             <Moon className="h-[1.2rem] w-[1.2rem] transition-transform rotate-0 scale-100 duration-200" />
           ) : (
