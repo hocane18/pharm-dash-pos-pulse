@@ -14,6 +14,16 @@ export function ThemeToggle() {
     setMounted(true);
   }, []);
 
+  const handleThemeChange = (selectedTheme: string) => {
+    setTheme(selectedTheme);
+    // Apply immediate visual feedback before React re-renders
+    if (selectedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
   if (!mounted) {
     return (
       <Button variant="ghost" size="icon" className="opacity-0">
@@ -35,11 +45,11 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="animate-scale-in">
-        <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer">
+        <DropdownMenuItem onClick={() => handleThemeChange("light")} className="cursor-pointer">
           <Sun className="mr-2 h-4 w-4" />
           <span>Light</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer">
+        <DropdownMenuItem onClick={() => handleThemeChange("dark")} className="cursor-pointer">
           <Moon className="mr-2 h-4 w-4" />
           <span>Dark</span>
         </DropdownMenuItem>
