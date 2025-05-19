@@ -107,7 +107,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 animate-fade-in">
         <h2 className="text-3xl font-bold tracking-tight">Welcome back, {user?.name}</h2>
         <p className="text-muted-foreground">
           Here's an overview of your pharmacy's performance
@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
 
       {/* Stats cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="hover-scale">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -124,46 +124,46 @@ const Dashboard: React.FC = () => {
                 <p className="text-2xl font-bold">${totalRevenue.toFixed(2)}</p>
               </div>
               <div className="rounded-full p-2 bg-primary/10 text-primary">
-                <Coins size={20} />
+                <Coins size={20} className="animate-[bounce_1.5s_ease-in-out_infinite]" />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover-scale">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Sales Today</p>
                 <p className="text-2xl font-bold">{totalSales}</p>
               </div>
-              <div className="rounded-full p-2 bg-blue-100 text-blue-600">
+              <div className="rounded-full p-2 bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300">
                 <ShoppingCart size={20} />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover-scale">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Low Stock Items</p>
                 <p className="text-2xl font-bold">{lowStockProducts.length}</p>
               </div>
-              <div className="rounded-full p-2 bg-amber-100 text-amber-600">
+              <div className="rounded-full p-2 bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-300">
                 <Package size={20} />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover-scale">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Expiring Soon</p>
                 <p className="text-2xl font-bold">{expiringProducts.length}</p>
               </div>
-              <div className="rounded-full p-2 bg-red-100 text-red-600">
-                <AlertTriangle size={20} />
+              <div className="rounded-full p-2 bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300">
+                <AlertTriangle size={20} className="animate-pulse" />
               </div>
             </div>
           </CardContent>
@@ -173,7 +173,7 @@ const Dashboard: React.FC = () => {
       {/* Main dashboard content */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Recent sales chart */}
-        <Card className="col-span-1">
+        <Card className="col-span-1 animate-fade-in" style={{animationDelay: '0.1s'}}>
           <CardHeader>
             <CardTitle>Revenue (Last 7 Days)</CardTitle>
             <CardDescription>Daily revenue breakdown</CardDescription>
@@ -185,14 +185,14 @@ const Dashboard: React.FC = () => {
                 <XAxis dataKey="day" />
                 <YAxis />
                 <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
-                <Bar dataKey="revenue" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         {/* Stock distribution */}
-        <Card className="col-span-1">
+        <Card className="col-span-1 animate-fade-in" style={{animationDelay: '0.2s'}}>
           <CardHeader>
             <CardTitle>Stock Distribution</CardTitle>
             <CardDescription>Inventory by category</CardDescription>
@@ -209,6 +209,8 @@ const Dashboard: React.FC = () => {
                   nameKey="name"
                   label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
+                  animationDuration={1000}
+                  animationBegin={200}
                 >
                   {stockDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -221,15 +223,15 @@ const Dashboard: React.FC = () => {
         </Card>
         
         {/* Top selling products */}
-        <Card>
+        <Card className="animate-fade-in" style={{animationDelay: '0.3s'}}>
           <CardHeader>
             <CardTitle>Top Selling Products</CardTitle>
             <CardDescription>Based on units sold</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {topProducts.map((product) => (
-                <div key={product.id} className="flex items-center">
+              {topProducts.map((product, index) => (
+                <div key={product.id} className="flex items-center hover:bg-accent/20 p-2 rounded-md transition-colors cursor-pointer" style={{animationDelay: `${0.1 * index}s`}}>
                   <div className="mr-4 h-10 w-10 rounded bg-primary/10 flex items-center justify-center">
                     <Package size={20} className="text-primary" />
                   </div>
@@ -248,20 +250,20 @@ const Dashboard: React.FC = () => {
         </Card>
         
         {/* Recent sales */}
-        <Card>
+        <Card className="animate-fade-in" style={{animationDelay: '0.4s'}}>
           <CardHeader>
             <CardTitle>Recent Sales</CardTitle>
             <CardDescription>Latest transactions</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentSales.slice(0, 5).map((sale) => (
-                <div key={sale.id} className="flex items-center">
-                  <div className="mr-4 h-10 w-10 rounded bg-blue-100 flex items-center justify-center">
+              {recentSales.slice(0, 5).map((sale, index) => (
+                <div key={sale.id} className="flex items-center hover:bg-accent/20 p-2 rounded-md transition-colors cursor-pointer" style={{animationDelay: `${0.1 * index}s`}}>
+                  <div className="mr-4 h-10 w-10 rounded bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
                     {sale.customer ? (
-                      <User size={20} className="text-blue-600" />
+                      <User size={20} className="text-blue-600 dark:text-blue-300" />
                     ) : (
-                      <Clock size={20} className="text-blue-600" />
+                      <Clock size={20} className="text-blue-600 dark:text-blue-300" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -284,32 +286,32 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Alert sections */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 animate-fade-in" style={{animationDelay: '0.5s'}}>
         {/* Low stock alerts */}
-        <Card className="col-span-1">
-          <CardHeader className="bg-amber-50 border-b border-amber-100">
+        <Card className="col-span-1 overflow-hidden">
+          <CardHeader className="bg-amber-50 border-b border-amber-100 dark:bg-amber-900/20 dark:border-amber-700/30">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-amber-800 flex items-center">
+              <CardTitle className="text-amber-800 dark:text-amber-300 flex items-center">
                 <AlertTriangle className="mr-2" size={18} />
                 Low Stock Alerts
               </CardTitle>
-              <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-1 text-xs font-medium">
+              <span className="rounded-full bg-amber-100 text-amber-800 dark:bg-amber-700 dark:text-amber-200 px-2 py-1 text-xs font-medium">
                 {lowStockProducts.length}
               </span>
             </div>
           </CardHeader>
           <CardContent className="p-0">
             {lowStockProducts.length > 0 ? (
-              <ul className="divide-y divide-gray-200">
-                {lowStockProducts.slice(0, 5).map((product) => (
-                  <li key={product.id} className="px-6 py-4">
+              <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                {lowStockProducts.slice(0, 5).map((product, index) => (
+                  <li key={product.id} className="px-6 py-4 hover:bg-amber-50/50 dark:hover:bg-amber-900/10 transition-colors cursor-pointer" style={{animationDelay: `${0.1 * index}s`}}>
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="font-medium text-gray-900">{product.name}</p>
-                        <p className="text-sm text-gray-500">{product.category}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{product.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{product.category}</p>
                       </div>
                       <div className="ml-2 text-right">
-                        <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded-md text-xs font-medium">
+                        <span className="bg-amber-100 text-amber-800 dark:bg-amber-700 dark:text-amber-200 px-2 py-1 rounded-md text-xs font-medium">
                           {product.stock} left
                         </span>
                       </div>
@@ -318,7 +320,7 @@ const Dashboard: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="p-6 text-center text-gray-500">
+              <div className="p-6 text-center text-gray-500 dark:text-gray-400">
                 No low stock items
               </div>
             )}
@@ -326,30 +328,30 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Expiring soon alerts */}
-        <Card className="col-span-1">
-          <CardHeader className="bg-red-50 border-b border-red-100">
+        <Card className="col-span-1 overflow-hidden">
+          <CardHeader className="bg-red-50 border-b border-red-100 dark:bg-red-900/20 dark:border-red-700/30">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-red-800 flex items-center">
+              <CardTitle className="text-red-800 dark:text-red-300 flex items-center">
                 <Clock className="mr-2" size={18} />
                 Expiring Soon
               </CardTitle>
-              <span className="rounded-full bg-red-100 text-red-800 px-2 py-1 text-xs font-medium">
+              <span className="rounded-full bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-200 px-2 py-1 text-xs font-medium">
                 {expiringProducts.length}
               </span>
             </div>
           </CardHeader>
           <CardContent className="p-0">
             {expiringProducts.length > 0 ? (
-              <ul className="divide-y divide-gray-200">
-                {expiringProducts.slice(0, 5).map((product) => (
-                  <li key={product.id} className="px-6 py-4">
+              <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                {expiringProducts.slice(0, 5).map((product, index) => (
+                  <li key={product.id} className="px-6 py-4 hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors cursor-pointer" style={{animationDelay: `${0.1 * index}s`}}>
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="font-medium text-gray-900">{product.name}</p>
-                        <p className="text-sm text-gray-500">Batch: {product.batchNumber}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{product.name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Batch: {product.batchNumber}</p>
                       </div>
                       <div className="ml-2 text-right">
-                        <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-xs font-medium">
+                        <span className="bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-200 px-2 py-1 rounded-md text-xs font-medium">
                           Expires: {new Date(product.expiryDate).toLocaleDateString()}
                         </span>
                       </div>
@@ -358,7 +360,7 @@ const Dashboard: React.FC = () => {
                 ))}
               </ul>
             ) : (
-              <div className="p-6 text-center text-gray-500">
+              <div className="p-6 text-center text-gray-500 dark:text-gray-400">
                 No products expiring soon
               </div>
             )}

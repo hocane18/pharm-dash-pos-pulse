@@ -29,6 +29,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavItemProps {
   to: string;
@@ -46,7 +47,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, onClick, badge }) =>
     <NavLink
       to={to}
       className={({ isActive }) => cn(
-        "flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-gray-700 hover:bg-gray-100 hover:text-gray-900",
+        "flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900",
         isActive && "bg-primary text-white hover:bg-primary/90 hover:text-white"
       )}
       onClick={onClick}
@@ -54,7 +55,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, icon, label, onClick, badge }) =>
       <span className="text-xl">{icon}</span>
       <span className="flex-1">{label}</span>
       {badge && badge > 0 && (
-        <Badge variant="destructive" className="ml-auto">
+        <Badge variant="destructive" className="ml-auto animate-pulse">
           {badge}
         </Badge>
       )}
@@ -80,30 +81,31 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground">
       {/* Sidebar for desktop */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 z-50 w-64 transform border-r transition-all duration-300 ease-in-out lg:static lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
+          "bg-sidebar text-sidebar-foreground border-sidebar-border"
         )}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-sidebar-border">
           <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
               <span className="text-white font-bold">Rx</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">PharmaPOS</span>
+            <span className="text-xl font-bold">PharmaPOS</span>
           </Link>
           <button 
             onClick={toggleSidebar}
-            className="p-2 rounded-md text-gray-500 hover:bg-gray-100 lg:hidden"
+            className="p-2 rounded-md hover:bg-sidebar-accent lg:hidden"
           >
             <X size={20} />
           </button>
         </div>
 
-        <nav className="p-4 space-y-1">
+        <nav className="p-4 space-y-1 animate-fade-in">
           <NavItem to="/" icon={<Home size={20} />} label="Dashboard" />
           
           {hasPermission('sales', 'view') && (
@@ -131,7 +133,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           )}
         </nav>
 
-        <div className="absolute bottom-0 w-full border-t border-gray-200 p-4">
+        <div className="absolute bottom-0 w-full border-t border-sidebar-border p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Avatar>
@@ -140,7 +142,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Avatar>
               <div>
                 <p className="text-sm font-medium">{user?.name}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                <p className="text-xs text-sidebar-foreground/70 capitalize">{user?.role}</p>
               </div>
             </div>
             <Button 
@@ -148,6 +150,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               size="icon" 
               onClick={logout}
               title="Logout"
+              className="hover:bg-sidebar-accent"
             >
               <LogOut size={18} />
             </Button>
@@ -158,46 +161,48 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top header */}
-        <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 lg:px-6">
+        <header className="bg-background border-b h-16 flex items-center px-4 lg:px-6">
           <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-md text-gray-500 hover:bg-gray-100 mr-4 hidden lg:block"
+            className="p-2 rounded-md hover:bg-muted/80 mr-4 hidden lg:block transition-transform duration-200 hover:scale-105"
           >
             <Menu size={20} />
           </button>
           
           <button 
             onClick={() => setMobileMenuOpen(true)}
-            className="p-2 rounded-md text-gray-500 hover:bg-gray-100 mr-4 lg:hidden"
+            className="p-2 rounded-md hover:bg-muted/80 mr-4 lg:hidden"
           >
             <Menu size={20} />
           </button>
           
           <div className="ml-auto flex items-center space-x-4">
+            <ThemeToggle />
+            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative hover:bg-muted/80 transition-transform duration-200 hover:scale-105">
                   <Bell size={20} />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full animate-pulse"></span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
+              <DropdownMenuContent align="end" className="w-80 animate-scale-in">
                 <div className="px-4 py-2 font-medium">Notifications</div>
                 <DropdownMenuSeparator />
                 <div className="max-h-96 overflow-auto">
-                  <div className="px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                  <div className="px-4 py-3 hover:bg-accent cursor-pointer transition-colors">
                     <div className="flex justify-between items-start">
                       <p className="font-medium text-sm">Stock Alert</p>
-                      <span className="text-xs text-gray-500">2h ago</span>
+                      <span className="text-xs text-muted-foreground">2h ago</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">Paracetamol 500mg is low in stock</p>
+                    <p className="text-xs text-muted-foreground mt-1">Paracetamol 500mg is low in stock</p>
                   </div>
-                  <div className="px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                  <div className="px-4 py-3 hover:bg-accent cursor-pointer transition-colors">
                     <div className="flex justify-between items-start">
                       <p className="font-medium text-sm">Expiry Alert</p>
-                      <span className="text-xs text-gray-500">1d ago</span>
+                      <span className="text-xs text-muted-foreground">1d ago</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">3 products are expiring in 30 days</p>
+                    <p className="text-xs text-muted-foreground mt-1">3 products are expiring in 30 days</p>
                   </div>
                 </div>
               </DropdownMenuContent>
@@ -205,7 +210,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-2">
+                <Button variant="ghost" className="flex items-center space-x-2 hover:bg-muted/80">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user?.avatar} alt={user?.name} />
                     <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
@@ -216,7 +221,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="animate-scale-in">
                 <div className="flex items-center justify-start p-2">
                   <div className="flex flex-col space-y-1 leading-none">
                     <p className="font-medium">{user?.name}</p>
@@ -225,19 +230,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/profile">
+                  <Link to="/profile" className="cursor-pointer">
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/settings">
+                  <Link to="/settings" className="cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
+                <DropdownMenuItem onClick={logout} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
@@ -250,17 +255,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="fixed inset-0 bg-black/50" onClick={closeMobileMenu} />
-            <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-white shadow-lg">
-              <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+            <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-background shadow-lg">
+              <div className="flex items-center justify-between h-16 px-4 border-b">
                 <Link to="/" className="flex items-center space-x-2" onClick={closeMobileMenu}>
                   <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
-                    <span className="text-white font-bold">Rx</span>
+                    <span className="text-primary-foreground font-bold">Rx</span>
                   </div>
-                  <span className="text-xl font-bold text-gray-800">PharmaPOS</span>
+                  <span className="text-xl font-bold">PharmaPOS</span>
                 </Link>
                 <button 
                   onClick={closeMobileMenu}
-                  className="p-2 rounded-md text-gray-500 hover:bg-gray-100"
+                  className="p-2 rounded-md hover:bg-muted/80"
                 >
                   <X size={20} />
                 </button>
@@ -292,7 +297,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <NavItem to="/settings" icon={<Settings size={20} />} label="Settings" onClick={closeMobileMenu} />
                 )}
               </nav>
-              <div className="absolute bottom-0 w-full border-t border-gray-200 p-4">
+              <div className="absolute bottom-0 w-full border-t p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Avatar>
@@ -301,7 +306,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </Avatar>
                     <div>
                       <p className="text-sm font-medium">{user?.name}</p>
-                      <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                      <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
                     </div>
                   </div>
                   <Button 
@@ -323,7 +328,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* Page content */}
         <main className="flex-1 overflow-y-auto p-4 lg:p-6">
-          {children}
+          <div className="animate-fade-in">
+            {children}
+          </div>
         </main>
       </div>
     </div>
