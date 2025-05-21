@@ -13,6 +13,13 @@ import { SalesProvider } from "./contexts/SalesContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import Sales from "./pages/Sales";
+import Inventory from "./pages/Inventory";
+import Customers from "./pages/Customers";
+import Prescriptions from "./pages/Prescriptions";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Unauthorized from "./pages/Unauthorized";
 
@@ -39,6 +46,62 @@ const App = () => (
                       <ProtectedRoute>
                         <Layout>
                           <Dashboard />
+                        </Layout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/sales" element={
+                      <ProtectedRoute allowedRoles={['admin', 'cashier', 'pharmacist']}>
+                        <Layout>
+                          <Sales />
+                        </Layout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/inventory" element={
+                      <ProtectedRoute allowedRoles={['admin', 'pharmacist']}>
+                        <Layout>
+                          <Inventory />
+                        </Layout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/customers" element={
+                      <ProtectedRoute allowedRoles={['admin', 'cashier', 'pharmacist']}>
+                        <Layout>
+                          <Customers />
+                        </Layout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/prescriptions" element={
+                      <ProtectedRoute allowedRoles={['admin', 'pharmacist']}>
+                        <Layout>
+                          <Prescriptions />
+                        </Layout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/reports" element={
+                      <ProtectedRoute allowedRoles={['admin']}>
+                        <Layout>
+                          <Reports />
+                        </Layout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/settings" element={
+                      <ProtectedRoute allowedRoles={['admin']}>
+                        <Layout>
+                          <Settings />
+                        </Layout>
+                      </ProtectedRoute>
+                    } />
+                    
+                    <Route path="/profile" element={
+                      <ProtectedRoute>
+                        <Layout>
+                          <Profile />
                         </Layout>
                       </ProtectedRoute>
                     } />
