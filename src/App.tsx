@@ -26,7 +26,7 @@ import Unauthorized from "./pages/Unauthorized";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider defaultTheme="system" enableSystem>
+  <ThemeProvider defaultTheme="system" enableSystem attribute="class">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />

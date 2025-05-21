@@ -71,9 +71,9 @@ const defaultRolePermissions: Record<UserRole, RolePermissions> = {
   },
   cashier: {
     inventory: { view: true, create: false, edit: false, delete: false },
-    sales: { view: true, create: true, edit: false, delete: false },
+    sales: { view: true, create: true, edit: true, delete: false },
     customers: { view: true, create: true, edit: true, delete: false },
-    prescriptions: { view: true, create: true, edit: false, delete: false },
+    prescriptions: { view: true, create: false, edit: false, delete: false },
     reports: { view: false, create: false, edit: false, delete: false },
     settings: { view: false, create: false, edit: false, delete: false },
   },
